@@ -26,43 +26,107 @@ const CONFIG_LOGO2 = {
   // Line 1 - Magno Serif with Arc Lower warp
   fontSize1Percent: 85,
   strokeWidthRatio1: 0.03,
-  letterSpacing1: -0.02,
-  horizontalScale1: 0.85,
+  letterSpacing1: -0.01,
+  horizontalScale1: 0.9,
   warpAmount1: 45,
   endLetterDropPercent1: 2,
   rightEndDropMultiplier1: 4,
   fontFamily1: "'magno-serif-variable', serif",
-  
-  // Line 2 - Sarah Script (no warp)
-  fontSize2Percent: 40,
+
+  // Line 2 - Sarah Script with arc warp
+  fontSize2Percent: 30,
   strokeWidthRatio2: 0.04,
   letterSpacing2: 0.0,
+  horizontalScale2: 1.0,
+  warpAmount2: 20,
+  endLetterDropPercent2: 1.5,
+  rightEndDropMultiplier2: 2,
   fontFamily2: "'sarah-script', cursive",
-  
+
   lineSpacing: -0.18,
 };
 
 // ============================================
 // KERNING MAPS FOR LOGO 1
 // ============================================
-const KERNING_PAIRS_LINE1 = {
-
-};
+const KERNING_PAIRS_LINE1 = {};
 
 const KERNING_PAIRS_LINE2 = {
-  AV: -0.1, VA: -0.09, AW: -0.08, WA: -0.08, AT: -0.08, TA: -0.08,
-  AY: -0.08, YA: -0.08, AO: -0.03, OA: -0.03, AC: -0.03, CA: -0.03,
-  AE: -0.04, EA: 0.0, AR: 0.03, AS: -0.03, SA: -0.03, AL: -0.02,
-  BE: -0.03, EB: -0.03, BA: -0.03, AB: -0.03, LT: -0.07, TL: -0.05,
-  LV: -0.06, VL: -0.05, LY: -0.06, YL: -0.05, LW: -0.05, WL: -0.04,
-  LL: 0.01, LA: 0.02, TO: -0.05, OT: -0.04, TC: -0.05, CT: -0.04,
-  TE: -0.04, ET: -0.04, TR: -0.04, RT: -0.04, TY: -0.04, YT: -0.04,
-  VE: -0.01, EV: -0.04, VO: -0.04, OV: -0.04, VR: -0.03, RV: -0.03,
-  RD: 0.0, DR: -0.03, RS: -0.04, SR: -0.03, RY: -0.04, YR: -0.04,
-  RW: -0.04, WR: -0.04, RA: -0.03, ER: 0.01, RE: -0.03, ES: -0.03,
-  SE: -0.03, PA: -0.05, AP: -0.04, YO: -0.05, OY: -0.04, WE: -0.04,
-  EW: -0.04, WO: -0.04, OW: -0.04, FA: -0.05, AF: -0.04, FO: -0.04,
-  OF: -0.04, ME: -0.04, LM: -0.03,
+  AV: -0.1,
+  VA: -0.09,
+  AW: -0.08,
+  WA: -0.08,
+  AT: -0.08,
+  TA: -0.08,
+  AY: -0.08,
+  YA: -0.08,
+  AO: -0.03,
+  OA: -0.03,
+  AC: -0.03,
+  CA: -0.03,
+  AE: -0.04,
+  EA: 0.0,
+  AR: 0.03,
+  AS: -0.03,
+  SA: -0.03,
+  AL: -0.02,
+  BE: -0.03,
+  EB: -0.03,
+  BA: -0.03,
+  AB: -0.03,
+  LT: -0.07,
+  TL: -0.05,
+  LV: -0.06,
+  VL: -0.05,
+  LY: -0.06,
+  YL: -0.05,
+  LW: -0.05,
+  WL: -0.04,
+  LL: 0.01,
+  LA: 0.02,
+  TO: -0.05,
+  OT: -0.04,
+  TC: -0.05,
+  CT: -0.04,
+  TE: -0.04,
+  ET: -0.04,
+  TR: -0.04,
+  RT: -0.04,
+  TY: -0.04,
+  YT: -0.04,
+  VE: -0.01,
+  EV: -0.04,
+  VO: -0.04,
+  OV: -0.04,
+  VR: -0.03,
+  RV: -0.03,
+  RD: 0.0,
+  DR: -0.03,
+  RS: -0.04,
+  SR: -0.03,
+  RY: -0.04,
+  YR: -0.04,
+  RW: -0.04,
+  WR: -0.04,
+  RA: -0.03,
+  ER: 0.01,
+  RE: -0.03,
+  ES: -0.03,
+  SE: -0.03,
+  PA: -0.05,
+  AP: -0.04,
+  YO: -0.05,
+  OY: -0.04,
+  WE: -0.04,
+  EW: -0.04,
+  WO: -0.04,
+  OW: -0.04,
+  FA: -0.05,
+  AF: -0.04,
+  FO: -0.04,
+  OF: -0.04,
+  ME: -0.04,
+  LM: -0.03,
 };
 
 // ============================================
@@ -82,7 +146,13 @@ function getKerning(char1, char2, kerningMap) {
   return kerningMap[pair] || 0;
 }
 
-function getArcLowerTransform(index, total, warpAmount, endDropPercent, rightMultiplier) {
+function getArcLowerTransform(
+  index,
+  total,
+  warpAmount,
+  endDropPercent,
+  rightMultiplier
+) {
   if (total <= 1) return { scale: 1, skew: 0, drop: 0 };
 
   const t = index / (total - 1);
@@ -91,7 +161,8 @@ function getArcLowerTransform(index, total, warpAmount, endDropPercent, rightMul
 
   const baseReduction = 0.15;
   const additionalReduction = (1 - baseReduction) * centeredness;
-  const totalReduction = (baseReduction + additionalReduction) * warpFactor * 0.5;
+  const totalReduction =
+    (baseReduction + additionalReduction) * warpFactor * 0.5;
   const scale = 1 - totalReduction;
 
   const posFromCenter = t - 0.5;
@@ -217,7 +288,7 @@ function createSportsLogoHTML_Logo1({
   secondaryColor = "#1a1a1a",
 } = {}) {
   const config = CONFIG_LOGO1;
-  
+
   const line1HTML = createLine1Text_Logo1(line1Text, {
     fontSizePercent: config.fontSize1Percent,
     strokeWidthRatio: config.strokeWidthRatio,
@@ -325,15 +396,34 @@ function createLine2Text_Logo2(text, options) {
     strokeColor,
     fontFamily,
     letterSpacing = 0.0,
+    horizontalScale = 1.0,
+    warpAmount = 25,
+    endLetterDropPercent = 1.5,
+    rightEndDropMultiplier = 2,
     textLength,
   } = options;
 
-  // For script font, render as single text element to preserve ligatures and flow
-  const fontSizeVW = fontSizePercent / (textLength * 0.45); // Adjust for script font width
+  // For script font, render character by character for arc effect
+  const chars = text.split(""); // Keep original case for script font
+  const total = chars.length;
+
+  const fontSizeVW = fontSizePercent / (textLength * 0.45) / horizontalScale;
   const strokeWidthVW = fontSizeVW * strokeWidthRatio;
 
-  return `
-    <div style="
+  let html = '<div style="display: inline-flex; align-items: flex-start;">';
+
+  chars.forEach((char, index) => {
+    const { scale, skew, drop } = getArcLowerTransform(
+      index,
+      total,
+      warpAmount,
+      endLetterDropPercent,
+      rightEndDropMultiplier
+    );
+
+    const dropVW = (drop / 100) * fontSizeVW;
+
+    html += `<span style="
       display: inline-block;
       font-family: ${fontFamily};
       font-size: ${fontSizeVW}vw;
@@ -341,10 +431,14 @@ function createLine2Text_Logo2(text, options) {
       -webkit-text-stroke: ${strokeWidthVW}vw ${strokeColor};
       paint-order: stroke fill;
       line-height: 1;
+      transform: scaleX(${horizontalScale}) scaleY(${scale}) skewY(${skew}deg) translateY(${dropVW}vw);
+      transform-origin: top center;
       letter-spacing: ${letterSpacing}em;
-      white-space: nowrap;
-    ">${escapeXml(text)}</div>
-  `;
+    ">${escapeXml(char)}</span>`;
+  });
+
+  html += "</div>";
+  return html;
 }
 
 function createSportsLogoHTML_Logo2({
@@ -354,7 +448,7 @@ function createSportsLogoHTML_Logo2({
   secondaryColor = "#ebba30",
 } = {}) {
   const config = CONFIG_LOGO2;
-  
+
   // Line 1: Magno Serif with Arc Lower warp
   const line1HTML = createLine1Text_Logo2(line1Text, {
     fontSizePercent: config.fontSize1Percent,
@@ -369,7 +463,7 @@ function createSportsLogoHTML_Logo2({
     rightEndDropMultiplier: config.rightEndDropMultiplier1,
   });
 
-  // Line 2: Sarah Script (no warp, inverted colors)
+  // Line 2: Sarah Script with arc warp (inverted colors)
   const line2HTML = createLine2Text_Logo2(line2Text, {
     fontSizePercent: config.fontSize2Percent,
     strokeWidthRatio: config.strokeWidthRatio2,
@@ -377,6 +471,10 @@ function createSportsLogoHTML_Logo2({
     strokeColor: primaryColor,
     fontFamily: config.fontFamily2,
     letterSpacing: config.letterSpacing2,
+    horizontalScale: config.horizontalScale2,
+    warpAmount: config.warpAmount2,
+    endLetterDropPercent: config.endLetterDropPercent2,
+    rightEndDropMultiplier: config.rightEndDropMultiplier2,
     textLength: line2Text.length,
   });
 
@@ -400,7 +498,7 @@ function createSportsLogoHTML_Logo2({
 // ============================================
 function createSportsLogoHTML(options) {
   const logoType = options.logoType || 1;
-  
+
   if (logoType === 2) {
     return createSportsLogoHTML_Logo2(options);
   }
