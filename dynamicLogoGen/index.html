@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sports Logo Generator</title>
+  <!-- GIN font -->
+  <link rel="stylesheet" href="https://use.typekit.net/bpz7hrv.css">
+  <!-- Magno Serif Variable font -->
   <link rel="stylesheet" href="https://use.typekit.net/bpz7hrv.css">
   <style>
     * { box-sizing: border-box; }
@@ -17,7 +20,7 @@
     h1 { text-align: center; color: #333; }
     .container {
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 320px 1fr;
       gap: 30px;
       align-items: start;
     }
@@ -34,14 +37,14 @@
       margin-bottom: 6px;
       color: #444;
     }
-    input[type="text"] {
+    input[type="text"], select {
       width: 100%;
       padding: 10px 12px;
       border: 2px solid #ddd;
       border-radius: 6px;
       font-size: 16px;
     }
-    input[type="text"]:focus {
+    input[type="text"]:focus, select:focus {
       border-color: #c41e3a;
       outline: none;
     }
@@ -86,7 +89,7 @@
       background: #f8f8f8;
       border-radius: 6px;
       padding: 12px;
-      font-size: 12px;
+      font-size: 11px;
       color: #666;
       margin-top: 20px;
     }
@@ -114,6 +117,24 @@
     button:hover {
       background: #a01830;
     }
+    .logo-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .logo-selector button {
+      flex: 1;
+      margin: 0;
+      background: #ddd;
+      color: #333;
+    }
+    .logo-selector button.active {
+      background: #c41e3a;
+      color: white;
+    }
+    .logo-selector button:hover:not(.active) {
+      background: #ccc;
+    }
     @media (max-width: 800px) {
       .container { grid-template-columns: 1fr; }
     }
@@ -124,6 +145,11 @@
   
   <div class="container">
     <div class="controls">
+      <div class="logo-selector">
+        <button id="logo1Btn" class="active" onclick="selectLogo(1)">Logo 1</button>
+        <button id="logo2Btn" onclick="selectLogo(2)">Logo 2</button>
+      </div>
+      
       <div class="control-group">
         <label for="line1">Line 1 Text</label>
         <input type="text" id="line1" value="BALLARD">
@@ -152,18 +178,16 @@
       
       <button onclick="copyHTML()">Copy HTML</button>
       
-      <div class="fixed-values">
-        <h4>Fixed Values</h4>
+      <div class="fixed-values" id="fixedValuesDisplay">
+        <h4>Logo 1 - Fixed Values</h4>
         <code>
-          Line 1 Width: 65%<br>
-          Line 2 Width: 70%<br>
+          Line 1 Width: 65% (GIN font)<br>
+          Line 2 Width: 70% (GIN font)<br>
           Stroke Ratio: 0.06<br>
           Letter Spacing L2: -0.09em<br>
-          Condense L2: 0.9<br>
-          Line Spacing: 0.9<br>
+          Condense L2: 0.7<br>
           Arc Warp: 50<br>
-          End Letter Drop: 5% left, 8% right<br>
-
+          End Drop: 5% left, 8% right
         </code>
       </div>
     </div>
@@ -176,10 +200,81 @@
 
   <script src="dynamic-logo.js"></script>
   <script>
+    let currentLogo = 1;
+    
+    // Default values for each logo type
+    const logoDefaults = {
+      1: {
+        line1: 'BALLARD',
+        line2: 'BEAVERS',
+        primary: '#c41e3a',
+        secondary: '#1a1a1a'
+      },
+      2: {
+        line1: 'PASSAIC',
+        line2: 'Cheer & Dance',
+        primary: '#086bb5',
+        secondary: '#ebba30'
+      }
+    };
+    
+    function selectLogo(logoNum) {
+      currentLogo = logoNum;
+      
+      // Update button states
+      document.getElementById('logo1Btn').classList.toggle('active', logoNum === 1);
+      document.getElementById('logo2Btn').classList.toggle('active', logoNum === 2);
+      
+      // Load default values for selected logo
+      const defaults = logoDefaults[logoNum];
+      document.getElementById('line1').value = defaults.line1;
+      document.getElementById('line2').value = defaults.line2;
+      document.getElementById('primaryColor').value = defaults.primary;
+      document.getElementById('primaryHex').value = defaults.primary;
+      document.getElementById('secondaryColor').value = defaults.secondary;
+      document.getElementById('secondaryHex').value = defaults.secondary;
+      
+      // Update fixed values display
+      updateFixedValuesDisplay();
+      
+      // Update preview
+      updatePreview();
+    }
+    
+    function updateFixedValuesDisplay() {
+      const display = document.getElementById('fixedValuesDisplay');
+      if (currentLogo === 1) {
+        display.innerHTML = `
+          <h4>Logo 1 - Fixed Values</h4>
+          <code>
+            Line 1 Width: 65% (GIN font)<br>
+            Line 2 Width: 70% (GIN font)<br>
+            Stroke Ratio: 0.06<br>
+            Letter Spacing L2: -0.09em<br>
+            Condense L2: 0.7<br>
+            Arc Warp: 50<br>
+            End Drop: 5% left, 8% right
+          </code>
+        `;
+      } else {
+        display.innerHTML = `
+          <h4>Logo 2 - Fixed Values</h4>
+          <code>
+            Line 1: Magno Serif (75%)<br>
+            &nbsp;&nbsp;Arc Warp: 45, Condense: 0.85<br>
+            &nbsp;&nbsp;End Drop: 4% left, 6% right<br>
+            Line 2: Sarah Script (50%)<br>
+            Line Spacing: 0.1
+          </code>
+        `;
+      }
+    }
+
     function getOptions() {
       return {
-        line1Text: document.getElementById('line1').value || 'BALLARD',
-        line2Text: document.getElementById('line2').value || 'BEAVERS',
+        logoType: currentLogo,
+        line1Text: document.getElementById('line1').value || (currentLogo === 1 ? 'BALLARD' : 'PSSAIG'),
+        line2Text: document.getElementById('line2').value || (currentLogo === 1 ? 'BEAVERS' : 'Cheer & Dance'),
         primaryColor: document.getElementById('primaryColor').value,
         secondaryColor: document.getElementById('secondaryColor').value
       };
